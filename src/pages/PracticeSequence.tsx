@@ -199,92 +199,106 @@ const PracticeSequence = () => {
           <div></div>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        {/* Fixed Header with Timer and Controls */}
+        <div className="bg-white/90 backdrop-blur-sm shadow-gentle sticky top-0 z-10 mb-6">
+          <div className="px-6 py-4">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-4">
+                <Badge variant="secondary">{currentPose.pose.category}</Badge>
+                <Badge variant="outline">{currentPose.pose.difficulty_level}</Badge>
+              </div>
+              <div className="text-4xl font-bold text-zen-blue">
+                {formatTime(timeRemaining)}
+              </div>
+              <div className="flex gap-3">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={handlePreviousPose}
+                  disabled={currentPoseIndex === 0}
+                >
+                  <SkipBack className="h-4 w-4" />
+                </Button>
+                {isPlaying ? (
+                  <Button variant="zen" size="sm" onClick={handlePause}>
+                    <Pause className="h-4 w-4" />
+                  </Button>
+                ) : (
+                  <Button variant="zen" size="sm" onClick={handlePlay}>
+                    <Play className="h-4 w-4" />
+                  </Button>
+                )}
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={handleNextPose}
+                  disabled={isLastPose}
+                >
+                  <SkipForward className="h-4 w-4" />
+                </Button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
           {/* Main Practice Area */}
-          <div className="lg:col-span-2">
-            <Card className="shadow-card">
-              <CardHeader className="text-center">
-                <div className="flex items-center justify-center gap-4 mb-4">
-                  <Badge variant="secondary">
-                    {currentPose.pose.category}
-                  </Badge>
-                  <Badge variant="outline">
-                    {currentPose.pose.difficulty_level}
-                  </Badge>
-                </div>
-                <CardTitle className="text-3xl">{currentPose.pose.name}</CardTitle>
-                <div className="text-4xl font-bold text-zen-blue">
-                  {formatTime(timeRemaining)}
-                </div>
-              </CardHeader>
-              <CardContent className="space-y-6">
-                {currentPose.pose.description && (
-                  <div>
-                    <h3 className="font-semibold mb-2">Description</h3>
+          <div className="lg:col-span-3">
+            <div className="text-center mb-6">
+              <h1 className="text-4xl font-bold mb-2">{currentPose.pose.name}</h1>
+            </div>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {currentPose.pose.description && (
+                <Card className="shadow-card">
+                  <CardHeader className="pb-3">
+                    <CardTitle className="text-lg">Description</CardTitle>
+                  </CardHeader>
+                  <CardContent>
                     <p className="text-muted-foreground">{currentPose.pose.description}</p>
-                  </div>
-                )}
-                
-                {currentPose.pose.instructions && (
-                  <div>
-                    <h3 className="font-semibold mb-2">Instructions</h3>
+                  </CardContent>
+                </Card>
+              )}
+              
+              {currentPose.pose.instructions && (
+                <Card className="shadow-card">
+                  <CardHeader className="pb-3">
+                    <CardTitle className="text-lg">Instructions</CardTitle>
+                  </CardHeader>
+                  <CardContent>
                     <p className="text-muted-foreground">{currentPose.pose.instructions}</p>
-                  </div>
-                )}
+                  </CardContent>
+                </Card>
+              )}
 
-                {currentPose.notes && (
-                  <div>
-                    <h3 className="font-semibold mb-2">Personal Notes</h3>
+              {currentPose.notes && (
+                <Card className="shadow-card md:col-span-2">
+                  <CardHeader className="pb-3">
+                    <CardTitle className="text-lg">Personal Notes</CardTitle>
+                  </CardHeader>
+                  <CardContent>
                     <p className="text-muted-foreground">{currentPose.notes}</p>
-                  </div>
-                )}
-
-                {/* Controls */}
-                <div className="flex justify-center gap-4 pt-6">
-                  <Button
-                    variant="outline"
-                    size="lg"
-                    onClick={handlePreviousPose}
-                    disabled={currentPoseIndex === 0}
-                  >
-                    <SkipBack className="h-5 w-5" />
-                  </Button>
-                  
-                  {isPlaying ? (
-                    <Button variant="zen" size="lg" onClick={handlePause}>
-                      <Pause className="h-5 w-5" />
-                    </Button>
-                  ) : (
-                    <Button variant="zen" size="lg" onClick={handlePlay}>
-                      <Play className="h-5 w-5" />
-                    </Button>
-                  )}
-                  
-                  <Button
-                    variant="outline"
-                    size="lg"
-                    onClick={handleNextPose}
-                    disabled={isLastPose}
-                  >
-                    <SkipForward className="h-5 w-5" />
-                  </Button>
-                </div>
-              </CardContent>
-            </Card>
+                  </CardContent>
+                </Card>
+              )}
+            </div>
           </div>
 
-          {/* Sequence Overview */}
+          {/* Compact Sequence Overview */}
           <div>
-            <Card className="shadow-card">
-              <CardHeader>
-                <CardTitle>Sequence Overview</CardTitle>
+            <Card className="shadow-card sticky top-32">
+              <CardHeader className="pb-3">
+                <CardTitle className="text-lg">Sequence</CardTitle>
+                <p className="text-sm text-muted-foreground">
+                  {currentPoseIndex + 1} of {poses.length}
+                </p>
               </CardHeader>
-              <CardContent>
-                <div className="space-y-3">
+              <CardContent className="max-h-96 overflow-y-auto">
+                <div className="space-y-2">
                   {poses.map((pose, index) => (
                     <div
                       key={pose.id}
-                      className={`p-3 rounded-lg border transition-zen cursor-pointer ${
+                      className={`p-2 rounded-md border transition-zen cursor-pointer text-sm ${
                         index === currentPoseIndex
                           ? 'bg-zen-blue-light border-zen-blue'
                           : 'bg-background hover:bg-muted'
@@ -292,18 +306,18 @@ const PracticeSequence = () => {
                       onClick={() => {
                         setCurrentPoseIndex(index);
                         const duration = pose.custom_duration_seconds || pose.pose.duration_seconds;
-                        setTimeRemaining(duration); // Already in seconds
+                        setTimeRemaining(duration);
                         setIsPlaying(false);
                       }}
                     >
                       <div className="flex justify-between items-center">
-                        <div>
-                          <p className="font-medium text-sm">{pose.pose.name}</p>
+                        <div className="min-w-0 flex-1">
+                          <p className="font-medium text-sm truncate">{pose.pose.name}</p>
                           <p className="text-xs text-muted-foreground">
                             {Math.round((pose.custom_duration_seconds || pose.pose.duration_seconds) / 60)}m {((pose.custom_duration_seconds || pose.pose.duration_seconds) % 60)}s
                           </p>
                         </div>
-                        <div className="text-xs">
+                        <div className="text-xs font-medium ml-2">
                           {index + 1}
                         </div>
                       </div>
