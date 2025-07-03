@@ -9,7 +9,147 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
-      [_ in never]: never
+      poses: {
+        Row: {
+          benefits: string | null
+          category: string | null
+          created_at: string
+          description: string | null
+          difficulty_level: string | null
+          duration_minutes: number
+          id: string
+          instructions: string | null
+          name: string
+          precautions: string | null
+          updated_at: string
+        }
+        Insert: {
+          benefits?: string | null
+          category?: string | null
+          created_at?: string
+          description?: string | null
+          difficulty_level?: string | null
+          duration_minutes?: number
+          id?: string
+          instructions?: string | null
+          name: string
+          precautions?: string | null
+          updated_at?: string
+        }
+        Update: {
+          benefits?: string | null
+          category?: string | null
+          created_at?: string
+          description?: string | null
+          difficulty_level?: string | null
+          duration_minutes?: number
+          id?: string
+          instructions?: string | null
+          name?: string
+          precautions?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      profiles: {
+        Row: {
+          created_at: string
+          full_name: string | null
+          id: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          full_name?: string | null
+          id?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          full_name?: string | null
+          id?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      sequence_poses: {
+        Row: {
+          created_at: string
+          custom_duration_minutes: number | null
+          id: string
+          notes: string | null
+          pose_id: string
+          position: number
+          sequence_id: string
+        }
+        Insert: {
+          created_at?: string
+          custom_duration_minutes?: number | null
+          id?: string
+          notes?: string | null
+          pose_id: string
+          position: number
+          sequence_id: string
+        }
+        Update: {
+          created_at?: string
+          custom_duration_minutes?: number | null
+          id?: string
+          notes?: string | null
+          pose_id?: string
+          position?: number
+          sequence_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "sequence_poses_pose_id_fkey"
+            columns: ["pose_id"]
+            isOneToOne: false
+            referencedRelation: "poses"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "sequence_poses_sequence_id_fkey"
+            columns: ["sequence_id"]
+            isOneToOne: false
+            referencedRelation: "sequences"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      sequences: {
+        Row: {
+          created_at: string
+          description: string | null
+          duration_minutes: number
+          id: string
+          name: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          duration_minutes: number
+          id?: string
+          name: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          duration_minutes?: number
+          id?: string
+          name?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never

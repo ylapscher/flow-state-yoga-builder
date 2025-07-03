@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { supabase } from '@/integrations/supabase/client';
-import Dashboard from '@/components/Dashboard';
+import CreateSequenceComponent from '@/components/CreateSequence';
 import AuthForm from '@/components/AuthForm';
 import { User, Session } from '@supabase/supabase-js';
 
-const Index = () => {
+const CreateSequencePage = () => {
   const [user, setUser] = useState<User | null>(null);
   const [session, setSession] = useState<Session | null>(null);
   const [loading, setLoading] = useState(true);
@@ -37,11 +37,11 @@ const Index = () => {
     );
   }
 
-  if (!user || !session) {
+  if (!user) {
     return <AuthForm />;
   }
 
-  return <Dashboard user={user} session={session} />;
+  return <CreateSequenceComponent user={user} />;
 };
 
-export default Index;
+export default CreateSequencePage;
