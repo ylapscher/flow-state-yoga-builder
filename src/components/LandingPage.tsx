@@ -252,6 +252,76 @@ const LandingPage = () => {
         </div>
       </div>
 
+      {/* Contact Form Section */}
+      {showContact && (
+        <div className="py-24 px-4 bg-gradient-to-r from-sage-light/10 to-zen-blue-light/10">
+          <div className="max-w-2xl mx-auto">
+            <div className="text-center mb-8">
+              <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-4">
+                Contact Us
+              </h2>
+              <p className="text-xl text-muted-foreground">
+                Have questions? We'd love to hear from you.
+              </p>
+            </div>
+            
+            <Card className="shadow-card">
+              <CardContent className="p-8">
+                <form onSubmit={handleContactSubmit} className="space-y-6">
+                  <div>
+                    <Label htmlFor="name">Name</Label>
+                    <Input
+                      id="name"
+                      type="text"
+                      value={contactForm.name}
+                      onChange={(e) => setContactForm({ ...contactForm, name: e.target.value })}
+                      required
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="email">Email</Label>
+                    <Input
+                      id="email"
+                      type="email"
+                      value={contactForm.email}
+                      onChange={(e) => setContactForm({ ...contactForm, email: e.target.value })}
+                      required
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="message">Message</Label>
+                    <Textarea
+                      id="message"
+                      value={contactForm.message}
+                      onChange={(e) => setContactForm({ ...contactForm, message: e.target.value })}
+                      required
+                      rows={4}
+                    />
+                  </div>
+                  <div className="flex gap-4">
+                    <Button
+                      type="submit"
+                      variant="zen"
+                      className="flex-1"
+                      disabled={isSubmitting}
+                    >
+                      {isSubmitting ? "Sending..." : "Send Message"}
+                    </Button>
+                    <Button
+                      type="button"
+                      variant="outline"
+                      onClick={() => setShowContact(false)}
+                    >
+                      Cancel
+                    </Button>
+                  </div>
+                </form>
+              </CardContent>
+            </Card>
+          </div>
+        </div>
+      )}
+
       {/* CTA Section */}
       <div className="py-24 px-4 text-center">
         <div className="max-w-3xl mx-auto">
