@@ -9,7 +9,8 @@
     <link rel="icon" href="/lovable-uploads/ab1f3c63-d9ab-45d6-9e12-0b47d464c0c6.png" type="image/png">
     <script>
       if (location.protocol !== 'https:' && location.hostname !== 'localhost') {
-        location.replace('https:' + window.location.href.substring(window.location.protocol.length));
+        const secureUrl = `https://${location.hostname}${location.pathname}`;
+        location.replace(secureUrl);
       }
     </script>
 
