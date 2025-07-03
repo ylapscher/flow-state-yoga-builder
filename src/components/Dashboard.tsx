@@ -3,6 +3,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
+import { Trash2 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { User, Session } from '@supabase/supabase-js';
 import heroImage from '@/assets/yoga-hero.jpg';
@@ -93,6 +94,44 @@ const Dashboard = ({
   const handlePracticeSequence = (sequenceId: string) => {
     window.location.href = `/practice-sequence/${sequenceId}`;
   };
+  
+  const handleDeleteSequence = async (sequenceId: string, sequenceName: string) => {
+    if (!confirm(`Are you sure you want to delete "${sequenceName}"? This action cannot be undone.`)) {
+      return;
+    }
+
+    try {
+      // First delete sequence_poses (cascaded by RLS policies)
+      const { error: posesError } = await supabase
+        .from('sequence_poses')
+        .delete()
+        .eq('sequence_id', sequenceId);
+
+      if (posesError) throw posesError;
+
+      // Then delete the sequence
+      const { error: sequenceError } = await supabase
+        .from('sequences')
+        .delete()
+        .eq('id', sequenceId);
+
+      if (sequenceError) throw sequenceError;
+
+      // Update local state
+      setSequences(sequences.filter(seq => seq.id !== sequenceId));
+      
+      toast({
+        title: "Sequence deleted",
+        description: `"${sequenceName}" has been deleted successfully.`,
+      });
+    } catch (error: any) {
+      toast({
+        title: "Error deleting sequence",
+        description: error.message,
+        variant: "destructive",
+      });
+    }
+  };
   return <div className="min-h-screen bg-gradient-to-br from-background via-sage-light/20 to-zen-blue-light/20">
       {/* Hero Section */}
       <div className="relative h-64 overflow-hidden">
@@ -152,12 +191,27 @@ const Dashboard = ({
             {sequences.map(sequence => <Card key={sequence.id} className="shadow-card hover:shadow-lg transition-zen cursor-pointer">
                 <CardHeader>
                   <div className="flex justify-between items-start">
-                    <CardTitle className="text-lg">{sequence.name}</CardTitle>
-                    <Badge variant="secondary">
-                      {Math.round(sequence.duration_seconds / 60)} min
-                    </Badge>
+                    <div className="flex-1">
+                      <CardTitle className="text-lg">{sequence.name}</CardTitle>
+                      <CardDescription className="mt-1">{sequence.description}</CardDescription>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <Badge variant="secondary">
+                        {Math.round(sequence.duration_seconds / 60)} min
+                      </Badge>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleDeleteSequence(sequence.id, sequence.name);
+                        }}
+                        className="text-destructive hover:text-destructive hover:bg-destructive/10 h-8 w-8 p-0"
+                      >
+                        <Trash2 className="h-4 w-4" />
+                      </Button>
+                    </div>
                   </div>
-                  <CardDescription>{sequence.description}</CardDescription>
                 </CardHeader>
                 <CardContent>
                   <p className="text-sm text-muted-foreground">
