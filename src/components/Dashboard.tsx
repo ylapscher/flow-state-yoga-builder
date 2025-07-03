@@ -23,11 +23,29 @@ interface DashboardProps {
 const Dashboard = ({ user, session }: DashboardProps) => {
   const [sequences, setSequences] = useState<Sequence[]>([]);
   const [loading, setLoading] = useState(true);
+  const [userProfile, setUserProfile] = useState<{ full_name: string | null } | null>(null);
   const { toast } = useToast();
 
   useEffect(() => {
     fetchSequences();
+    fetchUserProfile();
   }, []);
+
+  const fetchUserProfile = async () => {
+    try {
+      const { data, error } = await supabase
+        .from('profiles')
+        .select('full_name')
+        .eq('user_id', user.id)
+        .single();
+
+      if (error) throw error;
+      setUserProfile(data);
+    } catch (error: any) {
+      // Silently fail - will fallback to email
+      console.error('Error loading profile:', error);
+    }
+  };
 
   const fetchSequences = async () => {
     try {
@@ -101,7 +119,9 @@ const Dashboard = ({ user, session }: DashboardProps) => {
               <h2 className="text-2xl font-bold text-sage-dark">Yoga Flow</h2>
             </div>
             <div className="flex items-center space-x-4">
-              <span className="text-sm text-muted-foreground">Welcome, {user.email}</span>
+              <span className="text-sm text-muted-foreground">
+                Welcome, {userProfile?.full_name?.split(' ')[0] || user.email?.split('@')[0] || 'User'}
+              </span>
               <Button variant="outline" onClick={handleSignOut}>
                 Sign Out
               </Button>
