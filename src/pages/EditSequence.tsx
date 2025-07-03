@@ -343,7 +343,7 @@ const EditSequence = () => {
                 <Input
                   id="duration"
                   type="text"
-                  value={`${Math.round(totalDuration / 60)} minutes (${totalDuration} seconds)`}
+                  value={`${Math.round(totalDuration / 60)} minutes`}
                   readOnly
                   className="cursor-not-allowed bg-muted"
                 />
