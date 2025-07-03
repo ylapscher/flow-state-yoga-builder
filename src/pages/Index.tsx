@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import Dashboard from '@/components/Dashboard';
-import AuthForm from '@/components/AuthForm';
+import LandingPage from '@/components/LandingPage';
 import { User, Session } from '@supabase/supabase-js';
 
 const Index = () => {
@@ -38,7 +38,7 @@ const Index = () => {
   }
 
   if (!user || !session) {
-    return <AuthForm />;
+    return <LandingPage />;
   }
 
   return <Dashboard user={user} session={session} />;
