@@ -68,6 +68,14 @@ const Dashboard = ({ user, session }: DashboardProps) => {
     window.location.href = '/create-sequence';
   };
 
+  const handleEditSequence = (sequenceId: string) => {
+    window.location.href = `/edit-sequence/${sequenceId}`;
+  };
+
+  const handlePracticeSequence = (sequenceId: string) => {
+    window.location.href = `/practice-sequence/${sequenceId}`;
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-sage-light/20 to-zen-blue-light/20">
       {/* Hero Section */}
@@ -148,10 +156,20 @@ const Dashboard = ({ user, session }: DashboardProps) => {
                     Created {new Date(sequence.created_at).toLocaleDateString()}
                   </p>
                   <div className="flex space-x-2 mt-4">
-                    <Button variant="outline" size="sm" className="flex-1">
+                    <Button 
+                      variant="outline" 
+                      size="sm" 
+                      className="flex-1"
+                      onClick={() => handleEditSequence(sequence.id)}
+                    >
                       Edit
                     </Button>
-                    <Button variant="zen" size="sm" className="flex-1">
+                    <Button 
+                      variant="zen" 
+                      size="sm" 
+                      className="flex-1"
+                      onClick={() => handlePracticeSequence(sequence.id)}
+                    >
                       Practice
                     </Button>
                   </div>

@@ -6,6 +6,8 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Index from "./pages/Index";
 import Auth from "./pages/Auth";
 import CreateSequence from "./pages/CreateSequence";
+import EditSequence from "./pages/EditSequence";
+import PracticeSequence from "./pages/PracticeSequence";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -20,6 +22,8 @@ const App = () => (
           <Route path="/" element={<Index />} />
           <Route path="/auth" element={<Auth />} />
           <Route path="/create-sequence" element={<CreateSequence />} />
+          <Route path="/edit-sequence/:id" element={<EditSequence />} />
+          <Route path="/practice-sequence/:id" element={<PracticeSequence />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
