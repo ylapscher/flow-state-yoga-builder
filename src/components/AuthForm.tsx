@@ -7,7 +7,11 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useToast } from '@/hooks/use-toast';
 
-const AuthForm = () => {
+interface AuthFormProps {
+  onClose?: () => void;
+}
+
+const AuthForm = ({ onClose }: AuthFormProps) => {
   const [isLoading, setIsLoading] = useState(false);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -31,7 +35,8 @@ const AuthForm = () => {
         description: "You've been signed in successfully.",
       });
 
-      // Redirect will happen automatically via auth state change
+      // Close modal and redirect will happen automatically via auth state change
+      onClose?.();
       window.location.href = '/';
     } catch (error: any) {
       toast({
@@ -80,8 +85,7 @@ const AuthForm = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-sage-light via-zen-blue-light to-earth-light p-4">
-      <Card className="w-full max-w-md shadow-card">
+    <Card className="w-full border-none shadow-none">
         <CardHeader className="text-center">
           <CardTitle className="text-2xl font-bold text-foreground">Yoga Flow</CardTitle>
           <CardDescription>Create personalized yoga sequences</CardDescription>
@@ -166,7 +170,6 @@ const AuthForm = () => {
           </Tabs>
         </CardContent>
       </Card>
-    </div>
   );
 };
 

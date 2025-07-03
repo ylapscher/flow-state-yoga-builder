@@ -10,6 +10,7 @@ import { Clock, Users, Target, Sparkles, Mail } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import heroImage from '@/assets/yoga-hero.jpg';
 import AuthForm from './AuthForm';
+import { Dialog, DialogContent } from '@/components/ui/dialog';
 
 const LandingPage = () => {
   const [showAuth, setShowAuth] = useState(false);
@@ -51,9 +52,6 @@ const LandingPage = () => {
     }
   };
 
-  if (showAuth) {
-    return <AuthForm />;
-  }
 
 
   return (
@@ -366,6 +364,13 @@ const LandingPage = () => {
           </p>
         </div>
       </footer>
+
+      {/* Auth Modal */}
+      <Dialog open={showAuth} onOpenChange={setShowAuth}>
+        <DialogContent className="sm:max-w-md p-0 gap-0">
+          <AuthForm onClose={() => setShowAuth(false)} />
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
