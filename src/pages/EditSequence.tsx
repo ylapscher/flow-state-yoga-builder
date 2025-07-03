@@ -57,9 +57,14 @@ const EditSequence = () => {
   const [selectedPose, setSelectedPose] = useState<string>('');
   const [formData, setFormData] = useState({
     name: '',
-    description: '',
-    duration_seconds: 0
+    description: ''
   });
+
+  // Calculate total duration from all poses
+  const totalDuration = sequencePoses.reduce((total, sequencePose) => {
+    const duration = sequencePose.custom_duration_seconds || sequencePose.pose.duration_seconds;
+    return total + duration;
+  }, 0);
 
   const sensors = useSensors(
     useSensor(PointerSensor),
@@ -89,8 +94,7 @@ const EditSequence = () => {
       setSequence(sequenceData);
       setFormData({
         name: sequenceData.name,
-        description: sequenceData.description || '',
-        duration_seconds: sequenceData.duration_seconds
+        description: sequenceData.description || ''
       });
 
       // Fetch sequence poses
@@ -272,7 +276,7 @@ const EditSequence = () => {
         .update({
           name: formData.name.trim(),
           description: formData.description.trim(),
-          duration_seconds: formData.duration_seconds
+          duration_seconds: totalDuration
         })
         .eq('id', id);
 
@@ -335,14 +339,13 @@ const EditSequence = () => {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="duration">Duration (seconds)</Label>
+                <Label htmlFor="duration">Duration</Label>
                 <Input
                   id="duration"
-                  type="number"
-                  min="1"
-                  value={formData.duration_seconds}
-                  onChange={(e) => setFormData({ ...formData, duration_seconds: parseInt(e.target.value) || 0 })}
-                  placeholder="Enter duration in seconds"
+                  type="text"
+                  value={`${Math.round(totalDuration / 60)} minutes (${totalDuration} seconds)`}
+                  readOnly
+                  className="cursor-not-allowed bg-muted"
                 />
               </div>
 
