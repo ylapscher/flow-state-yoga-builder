@@ -97,7 +97,7 @@ const Dashboard = ({ user, session }: DashboardProps) => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-sage-light/20 to-zen-blue-light/20">
       {/* Hero Section */}
-      <div className="relative h-96 overflow-hidden">
+      <div className="relative h-64 overflow-hidden">
         <img 
           src={heroImage} 
           alt="Yoga practice" 
