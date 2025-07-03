@@ -291,57 +291,59 @@ const LandingPage = () => {
       </div>
 
       {/* Contact Form Section */}
-      <div id="contact-form" className="py-12 sm:py-16 px-4 bg-gradient-to-r from-sage-light/10 to-zen-blue-light/10">
-        <div className="max-w-lg sm:max-w-2xl mx-auto">
-          <div className="text-center mb-6 sm:mb-8">
-            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-foreground mb-3 sm:mb-4">
+      <div id="contact-form" className="py-8 sm:py-12 px-4 bg-gradient-to-r from-sage-light/10 to-zen-blue-light/10">
+        <div className="max-w-lg mx-auto">
+          <div className="text-center mb-4 sm:mb-6">
+            <h2 className="text-2xl sm:text-3xl font-bold text-foreground mb-2 sm:mb-3">
               Contact Us
             </h2>
-            <p className="text-base sm:text-lg text-muted-foreground px-2">
+            <p className="text-sm sm:text-base text-muted-foreground">
               Have questions? We'd love to hear from you.
             </p>
           </div>
           
           <Card className="shadow-card">
             <CardContent className="p-4 sm:p-6">
-              <form onSubmit={handleContactSubmit} className="space-y-4">
-                <div>
-                  <Label htmlFor="name" className="text-sm sm:text-base">Name</Label>
-                  <Input
-                    id="name"
-                    type="text"
-                    value={contactForm.name}
-                    onChange={(e) => setContactForm({ ...contactForm, name: e.target.value })}
-                    required
-                    className="mt-1 h-10 sm:h-11"
-                  />
+              <form onSubmit={handleContactSubmit} className="space-y-3">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <div>
+                    <Label htmlFor="name" className="text-sm">Name</Label>
+                    <Input
+                      id="name"
+                      type="text"
+                      value={contactForm.name}
+                      onChange={(e) => setContactForm({ ...contactForm, name: e.target.value })}
+                      required
+                      className="mt-1 h-9 sm:h-10"
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="email" className="text-sm">Email</Label>
+                    <Input
+                      id="email"
+                      type="email"
+                      value={contactForm.email}
+                      onChange={(e) => setContactForm({ ...contactForm, email: e.target.value })}
+                      required
+                      className="mt-1 h-9 sm:h-10"
+                    />
+                  </div>
                 </div>
                 <div>
-                  <Label htmlFor="email" className="text-sm sm:text-base">Email</Label>
-                  <Input
-                    id="email"
-                    type="email"
-                    value={contactForm.email}
-                    onChange={(e) => setContactForm({ ...contactForm, email: e.target.value })}
-                    required
-                    className="mt-1 h-10 sm:h-11"
-                  />
-                </div>
-                <div>
-                  <Label htmlFor="message" className="text-sm sm:text-base">Message</Label>
+                  <Label htmlFor="message" className="text-sm">Message</Label>
                   <Textarea
                     id="message"
                     value={contactForm.message}
                     onChange={(e) => setContactForm({ ...contactForm, message: e.target.value })}
                     required
-                    rows={4}
+                    rows={3}
                     className="mt-1 resize-none"
                   />
                 </div>
                 <Button
                   type="submit"
                   variant="zen"
-                  className="w-full h-10 sm:h-11 text-sm sm:text-base mt-6"
+                  className="w-full h-9 sm:h-10 text-sm mt-4"
                   disabled={isSubmitting}
                 >
                   {isSubmitting ? "Sending..." : "Send Message"}
