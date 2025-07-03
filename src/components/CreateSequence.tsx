@@ -186,15 +186,43 @@ const CreateSequence = ({ user }: CreateSequenceProps) => {
               </div>
               
               <div className="space-y-2">
-                <Label htmlFor="duration">Duration (seconds)</Label>
-                <Input
-                  id="duration"
-                  type="number"
-                  min="300"
-                  value={formData.duration_seconds}
-                  onChange={(e) => setFormData({ ...formData, duration_seconds: parseInt(e.target.value) || 0 })}
-                  placeholder="Enter duration in seconds"
-                />
+                <Label htmlFor="duration">Duration</Label>
+                <div className="space-y-3">
+                  <div className="flex gap-2">
+                    <Button
+                      type="button"
+                      variant={formData.duration_seconds === 2700 ? "zen" : "outline"}
+                      size="sm"
+                      onClick={() => setFormData({ ...formData, duration_seconds: 2700 })}
+                    >
+                      45 min
+                    </Button>
+                    <Button
+                      type="button"
+                      variant={formData.duration_seconds === 3600 ? "zen" : "outline"}
+                      size="sm"
+                      onClick={() => setFormData({ ...formData, duration_seconds: 3600 })}
+                    >
+                      60 min
+                    </Button>
+                    <Button
+                      type="button"
+                      variant={formData.duration_seconds === 4500 ? "zen" : "outline"}
+                      size="sm"
+                      onClick={() => setFormData({ ...formData, duration_seconds: 4500 })}
+                    >
+                      75 min
+                    </Button>
+                  </div>
+                  <Input
+                    id="duration"
+                    type="number"
+                    min="300"
+                    value={formData.duration_seconds}
+                    onChange={(e) => setFormData({ ...formData, duration_seconds: parseInt(e.target.value) || 0 })}
+                    placeholder="Or enter custom duration in seconds"
+                  />
+                </div>
               </div>
 
               <div className="space-y-2">
