@@ -180,52 +180,63 @@ const PracticeSequence = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-sage-light/20 to-zen-blue-light/20">
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="flex items-center justify-between mb-8">
+      <div className="max-w-4xl mx-auto px-3 sm:px-6 lg:px-8 py-4 sm:py-8">
+        {/* Mobile-optimized header */}
+        <div className="flex items-center justify-between mb-4 sm:mb-8">
           <Button
             variant="ghost"
             onClick={() => navigate('/')}
-            className="flex items-center gap-2"
+            className="flex items-center gap-1 sm:gap-2 text-xs sm:text-sm p-2 sm:p-3"
           >
-            <ArrowLeft className="h-4 w-4" />
-            Back to Dashboard
+            <ArrowLeft className="h-3 w-3 sm:h-4 sm:w-4" />
+            <span className="hidden sm:inline">Back to Dashboard</span>
+            <span className="sm:hidden">Back</span>
           </Button>
-          <div className="text-center">
-            <h1 className="text-2xl font-bold">{sequence.name}</h1>
-            <p className="text-muted-foreground">
+          <div className="text-center flex-1 mx-2">
+            <h1 className="text-lg sm:text-2xl font-bold truncate">{sequence.name}</h1>
+            <p className="text-xs sm:text-sm text-muted-foreground">
               Pose {currentPoseIndex + 1} of {poses.length}
             </p>
           </div>
-          <div></div>
+          <div className="w-16 sm:w-0"></div>
         </div>
 
-        {/* Fixed Header with Timer and Controls */}
-        <div className="bg-white/90 backdrop-blur-sm shadow-gentle sticky top-0 z-10 mb-6">
-          <div className="px-6 py-4">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-4">
-                <Badge variant="secondary">{currentPose.pose.category}</Badge>
-                <Badge variant="outline">{currentPose.pose.difficulty_level}</Badge>
+        {/* Mobile-optimized sticky header with timer and controls */}
+        <div className="bg-white/95 backdrop-blur-sm shadow-gentle sticky top-0 z-10 mb-4 sm:mb-6 rounded-lg border">
+          <div className="px-3 sm:px-6 py-3 sm:py-4">
+            {/* Mobile layout: stack vertically on small screens */}
+            <div className="space-y-3 sm:space-y-0 sm:flex sm:items-center sm:justify-between">
+              {/* Badges row */}
+              <div className="flex items-center justify-center sm:justify-start gap-2 sm:gap-4">
+                <Badge variant="secondary" className="text-xs">{currentPose.pose.category}</Badge>
+                <Badge variant="outline" className="text-xs">{currentPose.pose.difficulty_level}</Badge>
               </div>
-              <div className="text-4xl font-bold text-zen-blue">
-                {formatTime(timeRemaining)}
+              
+              {/* Timer - prominent on mobile */}
+              <div className="text-center">
+                <div className="text-3xl sm:text-4xl font-bold text-zen-blue">
+                  {formatTime(timeRemaining)}
+                </div>
               </div>
-              <div className="flex gap-3">
+              
+              {/* Controls - centered on mobile */}
+              <div className="flex justify-center gap-2 sm:gap-3">
                 <Button
                   variant="outline"
                   size="sm"
                   onClick={handlePreviousPose}
                   disabled={currentPoseIndex === 0}
+                  className="p-2 sm:p-3"
                 >
-                  <SkipBack className="h-4 w-4" />
+                  <SkipBack className="h-3 w-3 sm:h-4 sm:w-4" />
                 </Button>
                 {isPlaying ? (
-                  <Button variant="zen" size="sm" onClick={handlePause}>
-                    <Pause className="h-4 w-4" />
+                  <Button variant="zen" size="sm" onClick={handlePause} className="p-2 sm:p-3">
+                    <Pause className="h-3 w-3 sm:h-4 sm:w-4" />
                   </Button>
                 ) : (
-                  <Button variant="zen" size="sm" onClick={handlePlay}>
-                    <Play className="h-4 w-4" />
+                  <Button variant="zen" size="sm" onClick={handlePlay} className="p-2 sm:p-3">
+                    <Play className="h-3 w-3 sm:h-4 sm:w-4" />
                   </Button>
                 )}
                 <Button
@@ -233,29 +244,31 @@ const PracticeSequence = () => {
                   size="sm"
                   onClick={handleNextPose}
                   disabled={isLastPose}
+                  className="p-2 sm:p-3"
                 >
-                  <SkipForward className="h-4 w-4" />
+                  <SkipForward className="h-3 w-3 sm:h-4 sm:w-4" />
                 </Button>
               </div>
             </div>
           </div>
         </div>
 
-        <div className="space-y-6">
+        <div className="space-y-4 sm:space-y-6">
           {/* Main Practice Area */}
           <div>
-            <div className="text-center mb-6">
-              <h1 className="text-4xl font-bold mb-2">{currentPose.pose.name}</h1>
+            <div className="text-center mb-4 sm:mb-6">
+              <h1 className="text-2xl sm:text-4xl font-bold mb-2 px-2">{currentPose.pose.name}</h1>
             </div>
             
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {/* Mobile-first grid layout */}
+            <div className="grid grid-cols-1 gap-4 sm:gap-6">
               {currentPose.pose.description && (
                 <Card className="shadow-card">
                   <CardHeader className="pb-3">
-                    <CardTitle className="text-lg">Description</CardTitle>
+                    <CardTitle className="text-base sm:text-lg">Description</CardTitle>
                   </CardHeader>
                   <CardContent>
-                    <p className="text-muted-foreground">{currentPose.pose.description}</p>
+                    <p className="text-sm sm:text-base text-muted-foreground leading-relaxed">{currentPose.pose.description}</p>
                   </CardContent>
                 </Card>
               )}
@@ -263,43 +276,44 @@ const PracticeSequence = () => {
               {currentPose.pose.instructions && (
                 <Card className="shadow-card">
                   <CardHeader className="pb-3">
-                    <CardTitle className="text-lg">Instructions</CardTitle>
+                    <CardTitle className="text-base sm:text-lg">Instructions</CardTitle>
                   </CardHeader>
                   <CardContent>
-                    <p className="text-muted-foreground">{currentPose.pose.instructions}</p>
+                    <p className="text-sm sm:text-base text-muted-foreground leading-relaxed">{currentPose.pose.instructions}</p>
                   </CardContent>
                 </Card>
               )}
 
               {currentPose.notes && (
-                <Card className="shadow-card md:col-span-2">
+                <Card className="shadow-card">
                   <CardHeader className="pb-3">
-                    <CardTitle className="text-lg">Personal Notes</CardTitle>
+                    <CardTitle className="text-base sm:text-lg">Personal Notes</CardTitle>
                   </CardHeader>
                   <CardContent>
-                    <p className="text-muted-foreground">{currentPose.notes}</p>
+                    <p className="text-sm sm:text-base text-muted-foreground leading-relaxed">{currentPose.notes}</p>
                   </CardContent>
                 </Card>
               )}
             </div>
           </div>
 
-          {/* Full Width Sequence Overview */}
+          {/* Mobile-optimized Sequence Overview */}
           <Card className="shadow-card">
             <CardHeader className="pb-3">
               <div className="flex items-center justify-between">
-                <CardTitle className="text-lg">Sequence Overview</CardTitle>
-                <p className="text-sm text-muted-foreground">
-                  Pose {currentPoseIndex + 1} of {poses.length}
+                <CardTitle className="text-base sm:text-lg">Sequence Overview</CardTitle>
+                <p className="text-xs sm:text-sm text-muted-foreground">
+                  {currentPoseIndex + 1} of {poses.length}
                 </p>
               </div>
             </CardHeader>
             <CardContent>
-              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-3">
+              {/* Horizontal scroll on mobile, grid on larger screens */}
+              <div className="flex gap-3 overflow-x-auto pb-2 sm:grid sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 sm:gap-3 sm:overflow-visible sm:pb-0">
                 {poses.map((pose, index) => (
                   <div
                     key={pose.id}
-                    className={`p-3 rounded-md border transition-zen cursor-pointer ${
+                    className={`flex-shrink-0 w-24 sm:w-auto p-2 sm:p-3 rounded-md border transition-zen cursor-pointer ${
                       index === currentPoseIndex
                         ? 'bg-zen-blue-light border-zen-blue'
                         : 'bg-background hover:bg-muted'
@@ -315,7 +329,7 @@ const PracticeSequence = () => {
                       <div className="text-xs font-medium mb-1 text-muted-foreground">
                         {index + 1}
                       </div>
-                      <p className="font-medium text-sm mb-1 line-clamp-2">{pose.pose.name}</p>
+                      <p className="font-medium text-xs sm:text-sm mb-1 line-clamp-2 leading-tight">{pose.pose.name}</p>
                       <p className="text-xs text-muted-foreground">
                         {Math.round((pose.custom_duration_seconds || pose.pose.duration_seconds) / 60)}m {((pose.custom_duration_seconds || pose.pose.duration_seconds) % 60)}s
                       </p>
