@@ -16,7 +16,7 @@ export type Database = {
           created_at: string
           description: string | null
           difficulty_level: string | null
-          duration_minutes: number
+          duration_seconds: number
           id: string
           instructions: string | null
           name: string
@@ -29,7 +29,7 @@ export type Database = {
           created_at?: string
           description?: string | null
           difficulty_level?: string | null
-          duration_minutes?: number
+          duration_seconds?: number
           id?: string
           instructions?: string | null
           name: string
@@ -42,7 +42,7 @@ export type Database = {
           created_at?: string
           description?: string | null
           difficulty_level?: string | null
-          duration_minutes?: number
+          duration_seconds?: number
           id?: string
           instructions?: string | null
           name?: string
@@ -78,7 +78,7 @@ export type Database = {
       sequence_poses: {
         Row: {
           created_at: string
-          custom_duration_minutes: number | null
+          custom_duration_seconds: number | null
           id: string
           notes: string | null
           pose_id: string
@@ -87,7 +87,7 @@ export type Database = {
         }
         Insert: {
           created_at?: string
-          custom_duration_minutes?: number | null
+          custom_duration_seconds?: number | null
           id?: string
           notes?: string | null
           pose_id: string
@@ -96,7 +96,7 @@ export type Database = {
         }
         Update: {
           created_at?: string
-          custom_duration_minutes?: number | null
+          custom_duration_seconds?: number | null
           id?: string
           notes?: string | null
           pose_id?: string
@@ -124,7 +124,7 @@ export type Database = {
         Row: {
           created_at: string
           description: string | null
-          duration_minutes: number
+          duration_seconds: number
           id: string
           name: string
           updated_at: string
@@ -133,7 +133,7 @@ export type Database = {
         Insert: {
           created_at?: string
           description?: string | null
-          duration_minutes: number
+          duration_seconds: number
           id?: string
           name: string
           updated_at?: string
@@ -142,7 +142,7 @@ export type Database = {
         Update: {
           created_at?: string
           description?: string | null
-          duration_minutes?: number
+          duration_seconds?: number
           id?: string
           name?: string
           updated_at?: string

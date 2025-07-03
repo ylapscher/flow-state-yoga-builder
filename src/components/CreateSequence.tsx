@@ -14,16 +14,17 @@ interface Pose {
   id: string;
   name: string;
   description: string;
-  duration_minutes: number;
+  instructions: string;
+  duration_seconds: number;
   difficulty_level: string;
   category: string;
-  instructions: string;
   benefits: string;
+  precautions: string;
 }
 
 interface SelectedPose extends Pose {
   position: number;
-  custom_duration_minutes?: number;
+  custom_duration_seconds?: number;
 }
 
 interface CreateSequenceProps {
@@ -33,9 +34,11 @@ interface CreateSequenceProps {
 const CreateSequence = ({ user }: CreateSequenceProps) => {
   const [poses, setPoses] = useState<Pose[]>([]);
   const [selectedPoses, setSelectedPoses] = useState<SelectedPose[]>([]);
-  const [sequenceName, setSequenceName] = useState('');
-  const [sequenceDescription, setSequenceDescription] = useState('');
-  const [duration, setDuration] = useState<number>(60);
+  const [formData, setFormData] = useState({
+    name: '',
+    description: '',
+    duration_seconds: 3600 // Default 60 minutes in seconds
+  });
   const [loading, setLoading] = useState(false);
   const [posesLoading, setPosesLoading] = useState(true);
   const { toast } = useToast();
@@ -45,10 +48,10 @@ const CreateSequence = ({ user }: CreateSequenceProps) => {
   }, []);
 
   useEffect(() => {
-    if (duration) {
+    if (formData.duration_seconds) {
       generateSequence();
     }
-  }, [duration, poses]);
+  }, [formData.duration_seconds, poses]);
 
   const fetchPoses = async () => {
     try {
@@ -73,82 +76,30 @@ const CreateSequence = ({ user }: CreateSequenceProps) => {
   const generateSequence = () => {
     if (poses.length === 0) return;
 
-    const targetDuration = duration;
+    const targetDuration = formData.duration_seconds;
     let currentDuration = 0;
     const sequence: SelectedPose[] = [];
     let position = 1;
 
-    // Always start with Mountain Pose if available
-    const mountainPose = poses.find(p => p.name.toLowerCase().includes('mountain'));
-    if (mountainPose) {
-      sequence.push({ ...mountainPose, position: position++ });
-      currentDuration += mountainPose.duration_minutes;
-    }
-
-    // Add warm-up poses (Cat-Cow, gentle stretches)
-    const warmUpPoses = poses.filter(p => 
-      p.category === 'core' || 
-      (p.difficulty_level === 'beginner' && p.category !== 'relaxation')
-    );
-    
-    for (const pose of warmUpPoses.slice(0, 2)) {
-      if (currentDuration + pose.duration_minutes < targetDuration * 0.8) {
+    // Simple sequence generation logic
+    const availablePoses = [...poses];
+    while (currentDuration < targetDuration * 0.9 && availablePoses.length > 0) {
+      const randomIndex = Math.floor(Math.random() * availablePoses.length);
+      const pose = availablePoses[randomIndex];
+      
+      if (currentDuration + pose.duration_seconds <= targetDuration) {
         sequence.push({ ...pose, position: position++ });
-        currentDuration += pose.duration_minutes;
+        currentDuration += pose.duration_seconds;
       }
-    }
-
-    // Add main sequence poses based on difficulty and variety
-    const mainPoses = poses.filter(p => 
-      p.category !== 'relaxation' && 
-      !sequence.some(sp => sp.id === p.id)
-    );
-
-    // Mix different categories for a balanced practice
-    const categories = ['standing', 'balance', 'backbend', 'forward_fold', 'twist'];
-    
-    for (const category of categories) {
-      const categoryPoses = mainPoses.filter(p => p.category === category);
-      if (categoryPoses.length > 0 && currentDuration < targetDuration * 0.9) {
-        const pose = categoryPoses[Math.floor(Math.random() * categoryPoses.length)];
-        if (!sequence.some(sp => sp.id === pose.id)) {
-          sequence.push({ ...pose, position: position++ });
-          currentDuration += pose.duration_minutes;
-        }
-      }
-    }
-
-    // Add remaining poses to fill time
-    const remainingPoses = poses.filter(p => 
-      !sequence.some(sp => sp.id === p.id) && 
-      p.category !== 'relaxation'
-    );
-
-    for (const pose of remainingPoses) {
-      if (currentDuration + pose.duration_minutes <= targetDuration * 0.95) {
-        sequence.push({ ...pose, position: position++ });
-        currentDuration += pose.duration_minutes;
-      }
-    }
-
-    // Always end with relaxation
-    const savasana = poses.find(p => p.name.toLowerCase().includes('savasana') || p.category === 'relaxation');
-    if (savasana) {
-      sequence.push({ ...savasana, position: position++ });
-      currentDuration += savasana.duration_minutes;
+      
+      availablePoses.splice(randomIndex, 1);
     }
 
     setSelectedPoses(sequence);
   };
 
-  const getTotalDuration = () => {
-    return selectedPoses.reduce((total, pose) => {
-      return total + (pose.custom_duration_minutes || pose.duration_minutes);
-    }, 0);
-  };
-
   const handleSaveSequence = async () => {
-    if (!sequenceName.trim()) {
+    if (!formData.name.trim()) {
       toast({
         title: "Sequence name required",
         description: "Please enter a name for your sequence.",
@@ -157,26 +108,16 @@ const CreateSequence = ({ user }: CreateSequenceProps) => {
       return;
     }
 
-    if (selectedPoses.length === 0) {
-      toast({
-        title: "No poses selected",
-        description: "Please add some poses to your sequence.",
-        variant: "destructive",
-      });
-      return;
-    }
-
     setLoading(true);
 
     try {
-      // Create the sequence
       const { data: sequenceData, error: sequenceError } = await supabase
         .from('sequences')
         .insert({
           user_id: user.id,
-          name: sequenceName,
-          duration_minutes: duration,
-          description: sequenceDescription,
+          name: formData.name,
+          duration_seconds: formData.duration_seconds,
+          description: formData.description,
         })
         .select()
         .single();
@@ -184,25 +125,26 @@ const CreateSequence = ({ user }: CreateSequenceProps) => {
       if (sequenceError) throw sequenceError;
 
       // Add poses to the sequence
-      const sequencePoses = selectedPoses.map(pose => ({
-        sequence_id: sequenceData.id,
-        pose_id: pose.id,
-        position: pose.position,
-        custom_duration_minutes: pose.custom_duration_minutes,
-      }));
+      if (selectedPoses.length > 0) {
+        const sequencePoses = selectedPoses.map(pose => ({
+          sequence_id: sequenceData.id,
+          pose_id: pose.id,
+          position: pose.position,
+          custom_duration_seconds: pose.custom_duration_seconds,
+        }));
 
-      const { error: posesError } = await supabase
-        .from('sequence_poses')
-        .insert(sequencePoses);
+        const { error: posesError } = await supabase
+          .from('sequence_poses')
+          .insert(sequencePoses);
 
-      if (posesError) throw posesError;
+        if (posesError) throw posesError;
+      }
 
       toast({
         title: "Sequence saved!",
         description: "Your yoga sequence has been created successfully.",
       });
 
-      // Navigate back to dashboard
       window.location.href = '/';
     } catch (error: any) {
       toast({
@@ -215,10 +157,6 @@ const CreateSequence = ({ user }: CreateSequenceProps) => {
     }
   };
 
-  const handleBackToDashboard = () => {
-    window.location.href = '/';
-  };
-
   if (posesLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-background via-sage-light/20 to-zen-blue-light/20">
@@ -229,145 +167,65 @@ const CreateSequence = ({ user }: CreateSequenceProps) => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-sage-light/20 to-zen-blue-light/20">
-      {/* Navigation */}
-      <nav className="bg-white/80 backdrop-blur-sm shadow-gentle sticky top-0 z-10">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-16">
-            <div className="flex items-center">
-              <h2 className="text-2xl font-bold text-sage-dark">Create Sequence</h2>
-            </div>
-            <Button variant="outline" onClick={handleBackToDashboard}>
-              Back to Dashboard
-            </Button>
-          </div>
-        </div>
-      </nav>
-
-      {/* Main Content */}
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          {/* Sequence Settings */}
-          <div className="lg:col-span-1">
-            <Card className="shadow-card sticky top-24">
-              <CardHeader>
-                <CardTitle>Sequence Details</CardTitle>
-                <CardDescription>Configure your yoga practice</CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="space-y-2">
-                  <Label htmlFor="name">Sequence Name</Label>
-                  <Input
-                    id="name"
-                    placeholder="e.g. Morning Flow"
-                    value={sequenceName}
-                    onChange={(e) => setSequenceName(e.target.value)}
-                  />
-                </div>
-                
-                <div className="space-y-2">
-                  <Label htmlFor="duration">Duration</Label>
-                  <Select value={duration.toString()} onValueChange={(value) => setDuration(Number(value))}>
-                    <SelectTrigger>
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="45">45 minutes</SelectItem>
-                      <SelectItem value="60">60 minutes</SelectItem>
-                      <SelectItem value="75">75 minutes</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
+        <Card className="shadow-card">
+          <CardHeader>
+            <CardTitle>Create New Sequence</CardTitle>
+            <CardDescription>Design your personalized yoga practice</CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-6">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <div className="space-y-2">
+                <Label htmlFor="name">Sequence Name</Label>
+                <Input
+                  id="name"
+                  placeholder="e.g. Morning Flow"
+                  value={formData.name}
+                  onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                />
+              </div>
+              
+              <div className="space-y-2">
+                <Label htmlFor="duration">Duration (seconds)</Label>
+                <Input
+                  id="duration"
+                  type="number"
+                  min="300"
+                  value={formData.duration_seconds}
+                  onChange={(e) => setFormData({ ...formData, duration_seconds: parseInt(e.target.value) || 0 })}
+                  placeholder="Enter duration in seconds"
+                />
+              </div>
 
-                <div className="space-y-2">
-                  <Label htmlFor="description">Description (Optional)</Label>
-                  <Textarea
-                    id="description"
-                    placeholder="Describe your sequence..."
-                    value={sequenceDescription}
-                    onChange={(e) => setSequenceDescription(e.target.value)}
-                  />
-                </div>
+              <div className="space-y-2">
+                <Label htmlFor="description">Description</Label>
+                <Textarea
+                  id="description"
+                  placeholder="Describe your sequence..."
+                  value={formData.description}
+                  onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                  rows={2}
+                />
+              </div>
+            </div>
 
-                <div className="pt-4 border-t">
-                  <div className="flex justify-between items-center mb-4">
-                    <span className="font-medium">Generated Sequence</span>
-                    <Badge variant="secondary">
-                      {getTotalDuration().toFixed(1)} min
-                    </Badge>
-                  </div>
-                  <Button 
-                    onClick={generateSequence} 
-                    variant="outline" 
-                    className="w-full"
-                  >
-                    Regenerate Sequence
-                  </Button>
-                </div>
-
-                <Button 
-                  onClick={handleSaveSequence} 
-                  variant="zen" 
-                  className="w-full"
-                  disabled={loading}
-                >
-                  {loading ? 'Saving...' : 'Save Sequence'}
-                </Button>
-              </CardContent>
-            </Card>
-          </div>
-
-          {/* Generated Sequence */}
-          <div className="lg:col-span-2">
-            <Card className="shadow-card">
-              <CardHeader>
-                <CardTitle>Your Yoga Sequence</CardTitle>
-                <CardDescription>
-                  Generated sequence for {duration} minutes of practice
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                {selectedPoses.length === 0 ? (
-                  <p className="text-center text-muted-foreground py-8">
-                    No poses generated yet. Select a duration to get started.
-                  </p>
-                ) : (
-                  <div className="space-y-4">
-                    {selectedPoses.map((pose, index) => (
-                      <div 
-                        key={pose.id} 
-                        className="flex items-start space-x-4 p-4 rounded-lg bg-gradient-to-r from-sage-light/20 to-zen-blue-light/20 border border-sage-light/40"
-                      >
-                        <div className="flex-shrink-0 w-8 h-8 rounded-full bg-primary text-primary-foreground flex items-center justify-center text-sm font-medium">
-                          {index + 1}
-                        </div>
-                        <div className="flex-1">
-                          <h4 className="font-semibold text-foreground">{pose.name}</h4>
-                          <p className="text-sm text-muted-foreground mt-1">{pose.description}</p>
-                          <div className="flex items-center gap-2 mt-2">
-                            <Badge variant="outline" className="text-xs">
-                              {pose.duration_minutes} min
-                            </Badge>
-                            <Badge variant="outline" className="text-xs capitalize">
-                              {pose.difficulty_level}
-                            </Badge>
-                            <Badge variant="outline" className="text-xs capitalize">
-                              {pose.category.replace('_', ' ')}
-                            </Badge>
-                          </div>
-                          {pose.instructions && (
-                            <p className="text-xs text-muted-foreground mt-2 italic">
-                              {pose.instructions}
-                            </p>
-                          )}
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                )}
-              </CardContent>
-            </Card>
-          </div>
-        </div>
+            <div className="flex gap-4 pt-4">
+              <Button 
+                onClick={handleSaveSequence} 
+                variant="zen"
+                disabled={loading}
+              >
+                {loading ? 'Saving...' : 'Save Sequence'}
+              </Button>
+              <Button 
+                variant="outline" 
+                onClick={() => window.location.href = '/'}
+              >
+                Cancel
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
       </div>
     </div>
   );

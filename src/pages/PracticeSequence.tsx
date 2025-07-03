@@ -10,21 +10,21 @@ import { ArrowLeft, Play, Pause, SkipForward, SkipBack } from 'lucide-react';
 interface Sequence {
   id: string;
   name: string;
-  duration_minutes: number;
+  duration_seconds: number;
   description: string;
 }
 
 interface SequencePose {
   id: string;
   position: number;
-  custom_duration_minutes: number | null;
+  custom_duration_seconds: number | null;
   notes: string | null;
   pose: {
     id: string;
     name: string;
     description: string;
     instructions: string;
-    duration_minutes: number;
+    duration_seconds: number;
     difficulty_level: string;
     category: string;
   };
@@ -91,8 +91,8 @@ const PracticeSequence = () => {
       // Set initial timer for first pose
       if (posesData && posesData.length > 0) {
         const firstPose = posesData[0];
-        const duration = firstPose.custom_duration_minutes || firstPose.pose.duration_minutes;
-        setTimeRemaining(duration * 60); // Convert to seconds
+        const duration = firstPose.custom_duration_seconds || firstPose.pose.duration_seconds;
+        setTimeRemaining(duration); // Already in seconds
       }
     } catch (error: any) {
       toast({
@@ -119,8 +119,8 @@ const PracticeSequence = () => {
       const nextIndex = currentPoseIndex + 1;
       setCurrentPoseIndex(nextIndex);
       const nextPose = poses[nextIndex];
-      const duration = nextPose.custom_duration_minutes || nextPose.pose.duration_minutes;
-      setTimeRemaining(duration * 60);
+      const duration = nextPose.custom_duration_seconds || nextPose.pose.duration_seconds;
+      setTimeRemaining(duration); // Already in seconds
       setIsPlaying(false);
     } else {
       // Sequence completed
@@ -137,8 +137,8 @@ const PracticeSequence = () => {
       const prevIndex = currentPoseIndex - 1;
       setCurrentPoseIndex(prevIndex);
       const prevPose = poses[prevIndex];
-      const duration = prevPose.custom_duration_minutes || prevPose.pose.duration_minutes;
-      setTimeRemaining(duration * 60);
+      const duration = prevPose.custom_duration_seconds || prevPose.pose.duration_seconds;
+      setTimeRemaining(duration); // Already in seconds
       setIsPlaying(false);
     }
   };
@@ -291,8 +291,8 @@ const PracticeSequence = () => {
                       }`}
                       onClick={() => {
                         setCurrentPoseIndex(index);
-                        const duration = pose.custom_duration_minutes || pose.pose.duration_minutes;
-                        setTimeRemaining(duration * 60);
+                        const duration = pose.custom_duration_seconds || pose.pose.duration_seconds;
+                        setTimeRemaining(duration); // Already in seconds
                         setIsPlaying(false);
                       }}
                     >
@@ -300,7 +300,7 @@ const PracticeSequence = () => {
                         <div>
                           <p className="font-medium text-sm">{pose.pose.name}</p>
                           <p className="text-xs text-muted-foreground">
-                            {pose.custom_duration_minutes || pose.pose.duration_minutes} min
+                            {Math.round((pose.custom_duration_seconds || pose.pose.duration_seconds) / 60)}m {((pose.custom_duration_seconds || pose.pose.duration_seconds) % 60)}s
                           </p>
                         </div>
                         <div className="text-xs">

@@ -10,7 +10,7 @@ import heroImage from '@/assets/yoga-hero.jpg';
 interface Sequence {
   id: string;
   name: string;
-  duration_minutes: number;
+  duration_seconds: number;
   description: string;
   created_at: string;
 }
@@ -146,7 +146,7 @@ const Dashboard = ({ user, session }: DashboardProps) => {
                   <div className="flex justify-between items-start">
                     <CardTitle className="text-lg">{sequence.name}</CardTitle>
                     <Badge variant="secondary">
-                      {sequence.duration_minutes} min
+                      {Math.round(sequence.duration_seconds / 60)} min
                     </Badge>
                   </div>
                   <CardDescription>{sequence.description}</CardDescription>
