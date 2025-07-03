@@ -37,7 +37,8 @@ const CreateSequence = ({ user }: CreateSequenceProps) => {
   const [formData, setFormData] = useState({
     name: '',
     description: '',
-    duration_seconds: 3600 // Default 60 minutes in seconds
+    duration_seconds: 3600, // Default 60 minutes in seconds
+    generated: false
   });
   const [loading, setLoading] = useState(false);
   const [posesLoading, setPosesLoading] = useState(true);
@@ -47,11 +48,6 @@ const CreateSequence = ({ user }: CreateSequenceProps) => {
     fetchPoses();
   }, []);
 
-  useEffect(() => {
-    if (formData.duration_seconds) {
-      generateSequence();
-    }
-  }, [formData.duration_seconds, poses]);
 
   const fetchPoses = async () => {
     try {
@@ -73,8 +69,15 @@ const CreateSequence = ({ user }: CreateSequenceProps) => {
     }
   };
 
-  const generateSequence = () => {
-    if (poses.length === 0) return;
+  const handleGenerateSequence = () => {
+    if (poses.length === 0) {
+      toast({
+        title: "No poses available",
+        description: "Please wait for poses to load before generating a sequence.",
+        variant: "destructive",
+      });
+      return;
+    }
 
     const targetDuration = formData.duration_seconds;
     let currentDuration = 0;
@@ -96,6 +99,12 @@ const CreateSequence = ({ user }: CreateSequenceProps) => {
     }
 
     setSelectedPoses(sequence);
+    setFormData({ ...formData, generated: true });
+    
+    toast({
+      title: "Sequence generated!",
+      description: `Generated a ${Math.round(currentDuration / 60)} minute sequence with ${sequence.length} poses.`,
+    });
   };
 
   const handleSaveSequence = async () => {
@@ -186,42 +195,32 @@ const CreateSequence = ({ user }: CreateSequenceProps) => {
               </div>
               
               <div className="space-y-2">
-                <Label htmlFor="duration">Duration</Label>
-                <div className="space-y-3">
-                  <div className="flex gap-2">
-                    <Button
-                      type="button"
-                      variant={formData.duration_seconds === 2700 ? "zen" : "outline"}
-                      size="sm"
-                      onClick={() => setFormData({ ...formData, duration_seconds: 2700 })}
-                    >
-                      45 min
-                    </Button>
-                    <Button
-                      type="button"
-                      variant={formData.duration_seconds === 3600 ? "zen" : "outline"}
-                      size="sm"
-                      onClick={() => setFormData({ ...formData, duration_seconds: 3600 })}
-                    >
-                      60 min
-                    </Button>
-                    <Button
-                      type="button"
-                      variant={formData.duration_seconds === 4500 ? "zen" : "outline"}
-                      size="sm"
-                      onClick={() => setFormData({ ...formData, duration_seconds: 4500 })}
-                    >
-                      75 min
-                    </Button>
-                  </div>
-                  <Input
-                    id="duration"
-                    type="number"
-                    min="300"
-                    value={formData.duration_seconds}
-                    onChange={(e) => setFormData({ ...formData, duration_seconds: parseInt(e.target.value) || 0 })}
-                    placeholder="Or enter custom duration in seconds"
-                  />
+                <Label>Duration</Label>
+                <div className="flex gap-2">
+                  <Button
+                    type="button"
+                    variant={formData.duration_seconds === 2700 ? "zen" : "outline"}
+                    size="sm"
+                    onClick={() => setFormData({ ...formData, duration_seconds: 2700, generated: false })}
+                  >
+                    45 min
+                  </Button>
+                  <Button
+                    type="button"
+                    variant={formData.duration_seconds === 3600 ? "zen" : "outline"}
+                    size="sm"
+                    onClick={() => setFormData({ ...formData, duration_seconds: 3600, generated: false })}
+                  >
+                    60 min
+                  </Button>
+                  <Button
+                    type="button"
+                    variant={formData.duration_seconds === 4500 ? "zen" : "outline"}
+                    size="sm"
+                    onClick={() => setFormData({ ...formData, duration_seconds: 4500, generated: false })}
+                  >
+                    75 min
+                  </Button>
                 </div>
               </div>
 
@@ -237,11 +236,56 @@ const CreateSequence = ({ user }: CreateSequenceProps) => {
               </div>
             </div>
 
+            
+            {/* Generate Sequence Section */}
+            <div className="border-t pt-6">
+              <div className="flex items-center justify-between mb-4">
+                <div>
+                  <h3 className="text-lg font-semibold">Generate Sequence</h3>
+                  <p className="text-sm text-muted-foreground">
+                    Create a {Math.round(formData.duration_seconds / 60)} minute sequence
+                  </p>
+                </div>
+                <Button 
+                  onClick={handleGenerateSequence}
+                  variant="zen"
+                  disabled={posesLoading}
+                >
+                  {formData.generated ? 'Regenerate Sequence' : 'Generate Sequence'}
+                </Button>
+              </div>
+              
+              {formData.generated && selectedPoses.length > 0 && (
+                <div className="space-y-4">
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    {selectedPoses.map((pose, index) => (
+                      <Card key={pose.id} className="p-4">
+                        <div className="flex justify-between items-start mb-2">
+                          <Badge variant="outline" className="text-xs">
+                            #{index + 1}
+                          </Badge>
+                          <Badge variant="secondary" className="text-xs">
+                            {pose.duration_seconds}s
+                          </Badge>
+                        </div>
+                        <h4 className="font-medium text-sm">{pose.name}</h4>
+                        <p className="text-xs text-muted-foreground mt-1">{pose.category}</p>
+                      </Card>
+                    ))}
+                  </div>
+                  <div className="text-sm text-muted-foreground">
+                    Total: {Math.round(selectedPoses.reduce((total, pose) => total + pose.duration_seconds, 0) / 60)} minutes
+                    ({selectedPoses.length} poses)
+                  </div>
+                </div>
+              )}
+            </div>
+
             <div className="flex gap-4 pt-4">
               <Button 
                 onClick={handleSaveSequence} 
                 variant="zen"
-                disabled={loading}
+                disabled={loading || !formData.generated || selectedPoses.length === 0}
               >
                 {loading ? 'Saving...' : 'Save Sequence'}
               </Button>
