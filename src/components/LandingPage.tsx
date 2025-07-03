@@ -49,7 +49,7 @@ const LandingPage = () => {
             <Button 
               variant="outline" 
               size="lg"
-              className="text-lg px-8 py-6 border-white text-white hover:bg-white hover:text-sage-dark"
+              className="text-lg px-8 py-6 bg-white/20 backdrop-blur-sm border-white/50 text-white hover:bg-white hover:text-sage-dark"
               onClick={() => {
                 document.getElementById('features')?.scrollIntoView({ behavior: 'smooth' });
               }}
