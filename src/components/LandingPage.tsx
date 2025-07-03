@@ -94,8 +94,18 @@ const LandingPage = () => {
                 Sign In | Sign Up
               </Button>
             </div>
-            <div className="md:hidden">
-              <Button onClick={() => setShowAuth(true)} variant="zen" size="sm">
+            <div className="md:hidden flex items-center space-x-2">
+              <Button 
+                variant="outline"
+                size="sm"
+                onClick={() => {
+                  document.getElementById('contact-form')?.scrollIntoView({ behavior: 'smooth' });
+                }}
+                className="text-xs px-2"
+              >
+                Contact
+              </Button>
+              <Button onClick={() => setShowAuth(true)} variant="zen" size="sm" className="text-xs px-3">
                 Sign In
               </Button>
             </div>
@@ -116,14 +126,14 @@ const LandingPage = () => {
           <Badge variant="secondary" className="mb-6 bg-white/20 text-white border-white/30">
             Personalized Yoga Sequences
           </Badge>
-          <h1 className="text-6xl md:text-7xl font-bold mb-6 leading-tight">
+          <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold mb-6 leading-tight">
             Your Perfect
             <span className="block text-sage-light">Yoga Flow</span>
           </h1>
-          <p className="text-xl md:text-2xl mb-8 opacity-90 leading-relaxed">
+          <p className="text-lg sm:text-xl md:text-2xl mb-8 opacity-90 leading-relaxed px-2">
             Create personalized yoga sequences tailored to your time and goals.
-            <br />
-            From quick 45-minute sessions to deep 75-minute practices.
+            <br className="hidden sm:block" />
+            <span className="block sm:inline">From quick 45-minute sessions to deep 75-minute practices.</span>
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Button 
@@ -149,19 +159,19 @@ const LandingPage = () => {
       </div>
 
       {/* Features Section */}
-      <div id="features" className="py-24 px-4">
+      <div id="features" className="py-16 sm:py-20 md:py-24 px-4">
         <div className="max-w-6xl mx-auto">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-6">
+          <div className="text-center mb-12 md:mb-16">
+            <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-foreground mb-4 md:mb-6">
               Why Choose Yoga Flow?
             </h2>
-            <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
+            <p className="text-lg sm:text-xl text-muted-foreground max-w-3xl mx-auto px-2">
               Experience the perfect blend of ancient wisdom and modern convenience. 
               Our intelligent system creates sequences that fit your life.
             </p>
           </div>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8">
             <Card className="shadow-card hover:shadow-lg transition-zen text-center">
               <CardHeader>
                 <div className="w-16 h-16 bg-gradient-to-br from-sage-light to-sage rounded-2xl mx-auto mb-4 flex items-center justify-center">
@@ -222,19 +232,19 @@ const LandingPage = () => {
       </div>
 
       {/* How It Works Section */}
-      <div className="py-24 px-4 bg-gradient-to-r from-sage-light/10 to-zen-blue-light/10">
+      <div className="py-16 sm:py-20 md:py-24 px-4 bg-gradient-to-r from-sage-light/10 to-zen-blue-light/10">
         <div className="max-w-4xl mx-auto text-center">
-          <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-16">
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-foreground mb-12 md:mb-16">
             Simple. Effective. Personal.
           </h2>
           
-          <div className="grid md:grid-cols-3 gap-12">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-12">
             <div className="space-y-4">
               <div className="w-12 h-12 bg-sage rounded-full flex items-center justify-center text-white font-bold text-xl mx-auto">
                 1
               </div>
-              <h3 className="text-2xl font-semibold text-foreground">Choose Duration</h3>
-              <p className="text-muted-foreground">
+              <h3 className="text-xl sm:text-2xl font-semibold text-foreground">Choose Duration</h3>
+              <p className="text-muted-foreground px-2">
                 Select 45, 60, or 75 minutes based on your available time and energy.
               </p>
             </div>
@@ -243,8 +253,8 @@ const LandingPage = () => {
               <div className="w-12 h-12 bg-zen-blue rounded-full flex items-center justify-center text-white font-bold text-xl mx-auto">
                 2
               </div>
-              <h3 className="text-2xl font-semibold text-foreground">Generate Flow</h3>
-              <p className="text-muted-foreground">
+              <h3 className="text-xl sm:text-2xl font-semibold text-foreground">Generate Flow</h3>
+              <p className="text-muted-foreground px-2">
                 Our AI creates a balanced sequence with warm-up, poses, and cool-down.
               </p>
             </div>
@@ -253,8 +263,8 @@ const LandingPage = () => {
               <div className="w-12 h-12 bg-earth rounded-full flex items-center justify-center text-white font-bold text-xl mx-auto">
                 3
               </div>
-              <h3 className="text-2xl font-semibold text-foreground">Practice & Save</h3>
-              <p className="text-muted-foreground">
+              <h3 className="text-xl sm:text-2xl font-semibold text-foreground">Practice & Save</h3>
+              <p className="text-muted-foreground px-2">
                 Follow along with your sequence and save favorites to your personal library.
               </p>
             </div>
@@ -263,19 +273,19 @@ const LandingPage = () => {
       </div>
 
       {/* CTA Section */}
-      <div className="py-24 px-4 text-center">
+      <div className="py-16 sm:py-20 md:py-24 px-4 text-center">
         <div className="max-w-3xl mx-auto">
-          <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-6">
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-foreground mb-4 md:mb-6">
             Ready to Transform Your Practice?
           </h2>
-          <p className="text-xl text-muted-foreground mb-8">
+          <p className="text-lg sm:text-xl text-muted-foreground mb-6 md:mb-8 px-2">
             Join thousands who have discovered their perfect yoga flow. Start creating personalized sequences today.
           </p>
           <Button 
             onClick={() => setShowAuth(true)}
             variant="zen" 
             size="lg"
-            className="text-lg px-12 py-6 shadow-gentle"
+            className="text-base sm:text-lg px-8 sm:px-12 py-4 sm:py-6 shadow-gentle w-full sm:w-auto"
           >
             Begin Your Journey
           </Button>
@@ -283,54 +293,57 @@ const LandingPage = () => {
       </div>
 
       {/* Contact Form Section */}
-      <div id="contact-form" className="py-16 px-4 bg-gradient-to-r from-sage-light/10 to-zen-blue-light/10">
-        <div className="max-w-2xl mx-auto">
-          <div className="text-center mb-8">
-            <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
+      <div id="contact-form" className="py-12 sm:py-16 px-4 bg-gradient-to-r from-sage-light/10 to-zen-blue-light/10">
+        <div className="max-w-lg sm:max-w-2xl mx-auto">
+          <div className="text-center mb-6 sm:mb-8">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-foreground mb-3 sm:mb-4">
               Contact Us
             </h2>
-            <p className="text-lg text-muted-foreground">
+            <p className="text-base sm:text-lg text-muted-foreground px-2">
               Have questions? We'd love to hear from you.
             </p>
           </div>
           
           <Card className="shadow-card">
-            <CardContent className="p-6">
+            <CardContent className="p-4 sm:p-6">
               <form onSubmit={handleContactSubmit} className="space-y-4">
                 <div>
-                  <Label htmlFor="name">Name</Label>
+                  <Label htmlFor="name" className="text-sm sm:text-base">Name</Label>
                   <Input
                     id="name"
                     type="text"
                     value={contactForm.name}
                     onChange={(e) => setContactForm({ ...contactForm, name: e.target.value })}
                     required
+                    className="mt-1 h-10 sm:h-11"
                   />
                 </div>
                 <div>
-                  <Label htmlFor="email">Email</Label>
+                  <Label htmlFor="email" className="text-sm sm:text-base">Email</Label>
                   <Input
                     id="email"
                     type="email"
                     value={contactForm.email}
                     onChange={(e) => setContactForm({ ...contactForm, email: e.target.value })}
                     required
+                    className="mt-1 h-10 sm:h-11"
                   />
                 </div>
                 <div>
-                  <Label htmlFor="message">Message</Label>
+                  <Label htmlFor="message" className="text-sm sm:text-base">Message</Label>
                   <Textarea
                     id="message"
                     value={contactForm.message}
                     onChange={(e) => setContactForm({ ...contactForm, message: e.target.value })}
                     required
                     rows={4}
+                    className="mt-1 resize-none"
                   />
                 </div>
                 <Button
                   type="submit"
                   variant="zen"
-                  className="w-full"
+                  className="w-full h-10 sm:h-11 text-sm sm:text-base mt-6"
                   disabled={isSubmitting}
                 >
                   {isSubmitting ? "Sending..." : "Send Message"}
