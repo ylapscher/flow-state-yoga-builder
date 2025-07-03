@@ -69,19 +69,28 @@ const Dashboard = ({
   };
   const handleSignOut = async () => {
     try {
-      const {
-        error
-      } = await supabase.auth.signOut({
-        scope: 'global'
+      // Clear any stored auth tokens
+      localStorage.removeItem('supabase.auth.token');
+      Object.keys(localStorage).forEach((key) => {
+        if (key.startsWith('supabase.auth.') || key.includes('sb-')) {
+          localStorage.removeItem(key);
+        }
       });
-      if (error) throw error;
+
+      // Attempt to sign out (continue even if it fails)
+      try {
+        await supabase.auth.signOut({ scope: 'global' });
+      } catch (signOutError) {
+        console.warn('Sign out API call failed:', signOutError);
+        // Continue with redirect even if API call fails
+      }
+
+      // Force redirect to clean state
       window.location.href = '/auth';
     } catch (error: any) {
-      toast({
-        title: "Error signing out",
-        description: error.message,
-        variant: "destructive"
-      });
+      console.error('Error during sign out:', error);
+      // Force redirect even on error
+      window.location.href = '/auth';
     }
   };
   const handleCreateSequence = () => {
