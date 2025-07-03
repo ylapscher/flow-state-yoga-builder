@@ -6,14 +6,16 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 
-import { Clock, Users, Target, Sparkles, Mail } from 'lucide-react';
+import { Clock, Users, Target, Sparkles, Mail, Menu } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import heroImage from '@/assets/yoga-hero.jpg';
 import AuthForm from './AuthForm';
 import { Dialog, DialogContent } from '@/components/ui/dialog';
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
 
 const LandingPage = () => {
   const [showAuth, setShowAuth] = useState(false);
+  const [showMobileMenu, setShowMobileMenu] = useState(false);
   const [showContact, setShowContact] = useState(false);
   const [contactForm, setContactForm] = useState({ name: '', email: '', message: '' });
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -92,20 +94,49 @@ const LandingPage = () => {
                 Sign In | Sign Up
               </Button>
             </div>
-            <div className="md:hidden flex items-center space-x-2">
-              <Button 
-                variant="outline"
-                size="sm"
-                onClick={() => {
-                  document.getElementById('contact-form')?.scrollIntoView({ behavior: 'smooth' });
-                }}
-                className="text-xs px-2"
-              >
-                Contact
-              </Button>
-              <Button onClick={() => setShowAuth(true)} variant="zen" size="sm" className="text-xs px-3">
-                Sign In
-              </Button>
+            <div className="md:hidden">
+              <Sheet open={showMobileMenu} onOpenChange={setShowMobileMenu}>
+                <SheetTrigger asChild>
+                  <Button variant="ghost" size="sm" className="p-2">
+                    <Menu className="h-5 w-5" />
+                  </Button>
+                </SheetTrigger>
+                <SheetContent side="right" className="w-64">
+                  <SheetHeader>
+                    <SheetTitle>Menu</SheetTitle>
+                  </SheetHeader>
+                  <div className="flex flex-col space-y-4 mt-6">
+                    <button 
+                      onClick={() => {
+                        document.getElementById('features')?.scrollIntoView({ behavior: 'smooth' });
+                        setShowMobileMenu(false);
+                      }}
+                      className="text-left text-foreground hover:text-sage transition-zen py-2"
+                    >
+                      About
+                    </button>
+                    <button 
+                      onClick={() => {
+                        document.getElementById('contact-form')?.scrollIntoView({ behavior: 'smooth' });
+                        setShowMobileMenu(false);
+                      }}
+                      className="text-left text-foreground hover:text-sage transition-zen py-2"
+                    >
+                      Contact Us
+                    </button>
+                    <Button 
+                      onClick={() => {
+                        setShowAuth(true);
+                        setShowMobileMenu(false);
+                      }} 
+                      variant="zen" 
+                      className="w-full justify-start"
+                    >
+                      Sign In | Sign Up
+                    </Button>
+                  </div>
+                </SheetContent>
+              </Sheet>
             </div>
           </div>
         </div>
