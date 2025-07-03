@@ -2,21 +2,157 @@ import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Clock, Users, Target, Sparkles } from 'lucide-react';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Textarea } from '@/components/ui/textarea';
+import { Clock, Users, Target, Sparkles, Mail } from 'lucide-react';
+import { useToast } from '@/hooks/use-toast';
 import heroImage from '@/assets/yoga-hero.jpg';
 import AuthForm from './AuthForm';
 
 const LandingPage = () => {
   const [showAuth, setShowAuth] = useState(false);
+  const [showContact, setShowContact] = useState(false);
+  const [contactForm, setContactForm] = useState({ name: '', email: '', message: '' });
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const { toast } = useToast();
+
+  const handleContactSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+
+    try {
+      const response = await fetch('https://aqyoksafipjajbwosauh.supabase.co/functions/v1/send-contact-email', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFxeW9rc2FmaXBqYWpid29zYXVoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTE1MDAzOTUsImV4cCI6MjA2NzA3NjM5NX0.ngk0EWnE0t_jC6dhk59QTQeLVNJhcAtL3hLw8n6EJ7M`,
+        },
+        body: JSON.stringify(contactForm),
+      });
+
+      if (!response.ok) throw new Error('Failed to send message');
+
+      toast({
+        title: "Message sent!",
+        description: "Thank you for your message. We'll get back to you soon.",
+      });
+
+      setContactForm({ name: '', email: '', message: '' });
+      setShowContact(false);
+    } catch (error) {
+      toast({
+        title: "Error sending message",
+        description: "Please try again later.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
 
   if (showAuth) {
     return <AuthForm />;
   }
 
+  if (showContact) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-background via-sage-light/20 to-zen-blue-light/20 flex items-center justify-center p-4">
+        <Card className="w-full max-w-lg shadow-card">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <Mail className="w-6 h-6 text-sage" />
+              Contact Us
+            </CardTitle>
+            <CardDescription>
+              Send us a message and we'll get back to you as soon as possible.
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <form onSubmit={handleContactSubmit} className="space-y-4">
+              <div className="space-y-2">
+                <Label htmlFor="name">Name</Label>
+                <Input
+                  id="name"
+                  value={contactForm.name}
+                  onChange={(e) => setContactForm({ ...contactForm, name: e.target.value })}
+                  required
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="email">Email</Label>
+                <Input
+                  id="email"
+                  type="email"
+                  value={contactForm.email}
+                  onChange={(e) => setContactForm({ ...contactForm, email: e.target.value })}
+                  required
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="message">Message</Label>
+                <Textarea
+                  id="message"
+                  rows={4}
+                  value={contactForm.message}
+                  onChange={(e) => setContactForm({ ...contactForm, message: e.target.value })}
+                  required
+                />
+              </div>
+              <div className="flex gap-2">
+                <Button type="submit" variant="zen" disabled={isSubmitting} className="flex-1">
+                  {isSubmitting ? 'Sending...' : 'Send Message'}
+                </Button>
+                <Button type="button" variant="outline" onClick={() => setShowContact(false)}>
+                  Cancel
+                </Button>
+              </div>
+            </form>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-sage-light/20 to-zen-blue-light/20">
+      {/* Navigation */}
+      <nav className="fixed top-0 left-0 right-0 z-50 bg-white/90 backdrop-blur-sm shadow-gentle">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex justify-between items-center h-16">
+            <div className="flex items-center">
+              <h2 className="text-2xl font-bold text-sage-dark">Yoga Flow</h2>
+            </div>
+            <div className="hidden md:flex items-center space-x-8">
+              <button 
+                onClick={() => {
+                  document.getElementById('features')?.scrollIntoView({ behavior: 'smooth' });
+                }}
+                className="text-foreground hover:text-sage transition-zen"
+              >
+                About
+              </button>
+              <button 
+                onClick={() => setShowContact(true)}
+                className="text-foreground hover:text-sage transition-zen"
+              >
+                Contact Us
+              </button>
+              <Button onClick={() => setShowAuth(true)} variant="zen" size="sm">
+                Sign In / Sign Up
+              </Button>
+            </div>
+            <div className="md:hidden">
+              <Button onClick={() => setShowAuth(true)} variant="zen" size="sm">
+                Sign In
+              </Button>
+            </div>
+          </div>
+        </div>
+      </nav>
+
       {/* Hero Section */}
-      <div className="relative h-screen flex items-center justify-center overflow-hidden">
+      <div className="relative h-screen flex items-center justify-center overflow-hidden pt-16">
         <img 
           src={heroImage} 
           alt="Yoga practice" 
