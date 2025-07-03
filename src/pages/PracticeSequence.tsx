@@ -241,9 +241,9 @@ const PracticeSequence = () => {
           </div>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
+        <div className="space-y-6">
           {/* Main Practice Area */}
-          <div className="lg:col-span-3">
+          <div>
             <div className="text-center mb-6">
               <h1 className="text-4xl font-bold mb-2">{currentPose.pose.name}</h1>
             </div>
@@ -284,49 +284,47 @@ const PracticeSequence = () => {
             </div>
           </div>
 
-          {/* Compact Sequence Overview */}
-          <div>
-            <Card className="shadow-card sticky top-32">
-              <CardHeader className="pb-3">
-                <CardTitle className="text-lg">Sequence</CardTitle>
+          {/* Full Width Sequence Overview */}
+          <Card className="shadow-card">
+            <CardHeader className="pb-3">
+              <div className="flex items-center justify-between">
+                <CardTitle className="text-lg">Sequence Overview</CardTitle>
                 <p className="text-sm text-muted-foreground">
-                  {currentPoseIndex + 1} of {poses.length}
+                  Pose {currentPoseIndex + 1} of {poses.length}
                 </p>
-              </CardHeader>
-              <CardContent className="max-h-96 overflow-y-auto">
-                <div className="space-y-2">
-                  {poses.map((pose, index) => (
-                    <div
-                      key={pose.id}
-                      className={`p-2 rounded-md border transition-zen cursor-pointer text-sm ${
-                        index === currentPoseIndex
-                          ? 'bg-zen-blue-light border-zen-blue'
-                          : 'bg-background hover:bg-muted'
-                      }`}
-                      onClick={() => {
-                        setCurrentPoseIndex(index);
-                        const duration = pose.custom_duration_seconds || pose.pose.duration_seconds;
-                        setTimeRemaining(duration);
-                        setIsPlaying(false);
-                      }}
-                    >
-                      <div className="flex justify-between items-center">
-                        <div className="min-w-0 flex-1">
-                          <p className="font-medium text-sm truncate">{pose.pose.name}</p>
-                          <p className="text-xs text-muted-foreground">
-                            {Math.round((pose.custom_duration_seconds || pose.pose.duration_seconds) / 60)}m {((pose.custom_duration_seconds || pose.pose.duration_seconds) % 60)}s
-                          </p>
-                        </div>
-                        <div className="text-xs font-medium ml-2">
-                          {index + 1}
-                        </div>
+              </div>
+            </CardHeader>
+            <CardContent>
+              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-3">
+                {poses.map((pose, index) => (
+                  <div
+                    key={pose.id}
+                    className={`p-3 rounded-md border transition-zen cursor-pointer ${
+                      index === currentPoseIndex
+                        ? 'bg-zen-blue-light border-zen-blue'
+                        : 'bg-background hover:bg-muted'
+                    }`}
+                    onClick={() => {
+                      setCurrentPoseIndex(index);
+                      const duration = pose.custom_duration_seconds || pose.pose.duration_seconds;
+                      setTimeRemaining(duration);
+                      setIsPlaying(false);
+                    }}
+                  >
+                    <div className="text-center">
+                      <div className="text-xs font-medium mb-1 text-muted-foreground">
+                        {index + 1}
                       </div>
+                      <p className="font-medium text-sm mb-1 line-clamp-2">{pose.pose.name}</p>
+                      <p className="text-xs text-muted-foreground">
+                        {Math.round((pose.custom_duration_seconds || pose.pose.duration_seconds) / 60)}m {((pose.custom_duration_seconds || pose.pose.duration_seconds) % 60)}s
+                      </p>
                     </div>
-                  ))}
-                </div>
-              </CardContent>
-            </Card>
-          </div>
+                  </div>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
         </div>
       </div>
     </div>
