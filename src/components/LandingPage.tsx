@@ -12,6 +12,7 @@ import heroImage from '@/assets/yoga-hero.jpg';
 import AuthForm from './AuthForm';
 import { Dialog, DialogContent } from '@/components/ui/dialog';
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
+import { supabase } from '@/integrations/supabase/client';
 
 const LandingPage = () => {
   const [showAuth, setShowAuth] = useState(false);
@@ -26,16 +27,11 @@ const LandingPage = () => {
     setIsSubmitting(true);
 
     try {
-      const response = await fetch('https://aqyoksafipjajbwosauh.supabase.co/functions/v1/send-contact-email', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFxeW9rc2FmaXBqYWpid29zYXVoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTE1MDAzOTUsImV4cCI6MjA2NzA3NjM5NX0.ngk0EWnE0t_jC6dhk59QTQeLVNJhcAtL3hLw8n6EJ7M`,
-        },
-        body: JSON.stringify(contactForm),
+      const { data, error } = await supabase.functions.invoke('send-contact-email', {
+        body: contactForm,
       });
 
-      if (!response.ok) throw new Error('Failed to send message');
+      if (error) throw new Error('Failed to send message');
 
       toast({
         title: "Message sent!",
