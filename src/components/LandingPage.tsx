@@ -74,12 +74,18 @@ const LandingPage = () => {
               >
                 About
               </button>
-              <button 
-                onClick={() => setShowContact(true)}
-                className="text-foreground hover:text-sage transition-zen"
+              <Button 
+                variant="outline"
+                onClick={() => {
+                  setShowContact(true);
+                  setTimeout(() => {
+                    document.getElementById('contact-form')?.scrollIntoView({ behavior: 'smooth' });
+                  }, 100);
+                }}
+                className="text-foreground hover:text-sage transition-zen border-transparent hover:border-sage"
               >
                 Contact Us
-              </button>
+              </Button>
               <Button onClick={() => setShowAuth(true)} variant="zen" size="sm">
                 Sign In | Sign Up
               </Button>
@@ -254,7 +260,7 @@ const LandingPage = () => {
 
       {/* Contact Form Section */}
       {showContact && (
-        <div className="py-24 px-4 bg-gradient-to-r from-sage-light/10 to-zen-blue-light/10">
+        <div id="contact-form" className="py-24 px-4 bg-gradient-to-r from-sage-light/10 to-zen-blue-light/10">`
           <div className="max-w-2xl mx-auto">
             <div className="text-center mb-8">
               <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-4">
