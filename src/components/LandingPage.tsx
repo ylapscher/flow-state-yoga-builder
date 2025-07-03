@@ -5,7 +5,7 @@ import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+
 import { Clock, Users, Target, Sparkles, Mail } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import heroImage from '@/assets/yoga-hero.jpg';
@@ -13,6 +13,7 @@ import AuthForm from './AuthForm';
 
 const LandingPage = () => {
   const [showAuth, setShowAuth] = useState(false);
+  const [showContact, setShowContact] = useState(false);
   const [contactForm, setContactForm] = useState({ name: '', email: '', message: '' });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { toast } = useToast();
@@ -39,6 +40,7 @@ const LandingPage = () => {
       });
 
       setContactForm({ name: '', email: '', message: '' });
+      setShowContact(false);
     } catch (error) {
       toast({
         title: "Error sending message",
@@ -73,58 +75,12 @@ const LandingPage = () => {
               >
                 About
               </button>
-              <Dialog>
-                <DialogTrigger asChild>
-                  <button className="text-foreground hover:text-sage transition-zen">
-                    Contact Us
-                  </button>
-                </DialogTrigger>
-                <DialogContent className="w-full max-w-lg">
-                  <DialogHeader>
-                    <DialogTitle className="flex items-center gap-2">
-                      <Mail className="w-6 h-6 text-sage" />
-                      Contact Us
-                    </DialogTitle>
-                    <DialogDescription>
-                      Send us a message and we'll get back to you as soon as possible.
-                    </DialogDescription>
-                  </DialogHeader>
-                  <form onSubmit={handleContactSubmit} className="space-y-4">
-                    <div className="space-y-2">
-                      <Label htmlFor="name">Name</Label>
-                      <Input
-                        id="name"
-                        value={contactForm.name}
-                        onChange={(e) => setContactForm({ ...contactForm, name: e.target.value })}
-                        required
-                      />
-                    </div>
-                    <div className="space-y-2">
-                      <Label htmlFor="email">Email</Label>
-                      <Input
-                        id="email"
-                        type="email"
-                        value={contactForm.email}
-                        onChange={(e) => setContactForm({ ...contactForm, email: e.target.value })}
-                        required
-                      />
-                    </div>
-                    <div className="space-y-2">
-                      <Label htmlFor="message">Message</Label>
-                      <Textarea
-                        id="message"
-                        rows={4}
-                        value={contactForm.message}
-                        onChange={(e) => setContactForm({ ...contactForm, message: e.target.value })}
-                        required
-                      />
-                    </div>
-                    <Button type="submit" variant="zen" disabled={isSubmitting} className="w-full">
-                      {isSubmitting ? 'Sending...' : 'Send Message'}
-                    </Button>
-                  </form>
-                </DialogContent>
-              </Dialog>
+              <button 
+                onClick={() => setShowContact(true)}
+                className="text-foreground hover:text-sage transition-zen"
+              >
+                Contact Us
+              </button>
               <Button onClick={() => setShowAuth(true)} variant="zen" size="sm">
                 Sign In / Sign Up
               </Button>
@@ -296,6 +252,66 @@ const LandingPage = () => {
           </div>
         </div>
       </div>
+
+      {/* Contact Form Section */}
+      {showContact && (
+        <div className="py-24 px-4 bg-gradient-to-r from-sage-light/10 to-zen-blue-light/10">
+          <div className="max-w-2xl mx-auto">
+            <Card className="shadow-card">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Mail className="w-6 h-6 text-sage" />
+                  Contact Us
+                </CardTitle>
+                <CardDescription>
+                  Send us a message and we'll get back to you as soon as possible.
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <form onSubmit={handleContactSubmit} className="space-y-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="name">Name</Label>
+                    <Input
+                      id="name"
+                      value={contactForm.name}
+                      onChange={(e) => setContactForm({ ...contactForm, name: e.target.value })}
+                      required
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="email">Email</Label>
+                    <Input
+                      id="email"
+                      type="email"
+                      value={contactForm.email}
+                      onChange={(e) => setContactForm({ ...contactForm, email: e.target.value })}
+                      required
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="message">Message</Label>
+                    <Textarea
+                      id="message"
+                      rows={4}
+                      value={contactForm.message}
+                      onChange={(e) => setContactForm({ ...contactForm, message: e.target.value })}
+                      required
+                    />
+                  </div>
+                  <div className="flex gap-2">
+                    <Button type="submit" variant="zen" disabled={isSubmitting} className="flex-1">
+                      {isSubmitting ? 'Sending...' : 'Send Message'}
+                    </Button>
+                    <Button type="button" variant="outline" onClick={() => setShowContact(false)}>
+                      Cancel
+                    </Button>
+                  </div>
+                </form>
+              </CardContent>
+            </Card>
+          </div>
+        </div>
+      )}
 
       {/* CTA Section */}
       <div className="py-24 px-4 text-center">
