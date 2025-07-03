@@ -1,73 +1,62 @@
-# Welcome to your Lovable project
+# Flow State Yoga
 
-## Project info
+## Overview
 
-**URL**: https://lovable.dev/projects/127f4cc3-0dd5-4dd8-8d4b-8f7111bc331e
+Flow State – a yoga sequence generator where users can sign up / log in, create, edit, and delete customised yoga sequences.
 
-## How can I edit this code?
+## Development Setup
 
-There are several ways of editing your application.
+To set up and run the Flow State yoga app locally:
 
-**Use Lovable**
+**Prerequisites**
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/127f4cc3-0dd5-4dd8-8d4b-8f7111bc331e) and start prompting.
+- Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+- Supabase account and project for database and authentication
 
-Changes made via Lovable will be committed automatically to this repo.
-
-**Use your preferred IDE**
-
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
-
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
-
-Follow these steps:
+**Local Setup**
 
 ```sh
-# Step 1: Clone the repository using the project's Git URL.
+# Step 1: Clone the repository
 git clone <YOUR_GIT_URL>
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+# Step 2: Navigate to the project directory
+cd flow-state-yoga-builder
 
-# Step 3: Install the necessary dependencies.
+# Step 3: Install dependencies
 npm i
 
-# Step 4: Start the development server with auto-reloading and an instant preview.
+# Step 4: Set up environment variables
+# Create a .env file with your Supabase credentials
+# VITE_SUPABASE_URL=your_supabase_url
+# VITE_SUPABASE_ANON_KEY=your_supabase_anon_key
+
+# Step 5: Start the development server
 npm run dev
 ```
 
-**Edit a file directly in GitHub**
+**Alternative Development Methods**
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+- **GitHub**: Edit files directly in the browser by clicking the "Edit" button on any file
+- **GitHub Codespaces**: Launch a cloud development environment from the "Code" button
 
-**Use GitHub Codespaces**
-
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
-
-## What technologies are used for this project?
+## Tech Stack
 
 This project is built with:
 
-- Vite
-- TypeScript
 - React
-- shadcn-ui
+- TypeScript
+- Vite
 - Tailwind CSS
+- shadcn-ui
+- Supabase DB & Auth
+- @dnd-kit
+- react-router
+- TanStack Query
 
-## How can I deploy this project?
+## Deploying the Project
 
-Simply open [Lovable](https://lovable.dev/projects/127f4cc3-0dd5-4dd8-8d4b-8f7111bc331e) and click on Share -> Publish.
+To deploy the project, you can use your preferred service like Vercel, Netlify, or any other static host that supports React applications.
 
-## Can I connect a custom domain to my Lovable project?
+## Connecting a Custom Domain
 
-Yes, you can!
-
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
-
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/tips-tricks/custom-domain#step-by-step-guide)
+You can connect a custom domain through your chosen hosting provider's domain settings or DNS management.
