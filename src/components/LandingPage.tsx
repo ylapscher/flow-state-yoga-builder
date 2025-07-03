@@ -63,7 +63,14 @@ const LandingPage = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             <div className="flex items-center">
-              <h2 className="text-2xl font-bold text-sage-dark">Yoga Flow</h2>
+              <button 
+                onClick={() => {
+                  window.scrollTo({ top: 0, behavior: 'smooth' });
+                }}
+                className="text-2xl font-bold text-sage-dark hover:text-sage transition-zen cursor-pointer"
+              >
+                Yoga Flow
+              </button>
             </div>
             <div className="hidden md:flex items-center space-x-8">
               <button 
@@ -258,9 +265,29 @@ const LandingPage = () => {
         </div>
       </div>
 
+      {/* CTA Section */}
+      <div className="py-24 px-4 text-center">
+        <div className="max-w-3xl mx-auto">
+          <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-6">
+            Ready to Transform Your Practice?
+          </h2>
+          <p className="text-xl text-muted-foreground mb-8">
+            Join thousands who have discovered their perfect yoga flow. Start creating personalized sequences today.
+          </p>
+          <Button 
+            onClick={() => setShowAuth(true)}
+            variant="zen" 
+            size="lg"
+            className="text-lg px-12 py-6 shadow-gentle"
+          >
+            Begin Your Journey
+          </Button>
+        </div>
+      </div>
+
       {/* Contact Form Section */}
       {showContact && (
-        <div id="contact-form" className="py-24 px-4 bg-gradient-to-r from-sage-light/10 to-zen-blue-light/10">`
+        <div id="contact-form" className="py-24 px-4 bg-gradient-to-r from-sage-light/10 to-zen-blue-light/10">
           <div className="max-w-2xl mx-auto">
             <div className="text-center mb-8">
               <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-4">
@@ -328,32 +355,15 @@ const LandingPage = () => {
         </div>
       )}
 
-      {/* CTA Section */}
-      <div className="py-24 px-4 text-center">
-        <div className="max-w-3xl mx-auto">
-          <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-6">
-            Ready to Transform Your Practice?
-          </h2>
-          <p className="text-xl text-muted-foreground mb-8">
-            Join thousands who have discovered their perfect yoga flow. Start creating personalized sequences today.
-          </p>
-          <Button 
-            onClick={() => setShowAuth(true)}
-            variant="zen" 
-            size="lg"
-            className="text-lg px-12 py-6 shadow-gentle"
-          >
-            Begin Your Journey
-          </Button>
-        </div>
-      </div>
-
       {/* Footer */}
       <footer className="py-12 px-4 border-t border-border">
         <div className="max-w-6xl mx-auto text-center">
           <h3 className="text-2xl font-bold text-sage-dark mb-4">Yoga Flow</h3>
-          <p className="text-muted-foreground">
+          <p className="text-muted-foreground mb-2">
             Personalized yoga sequences for every practitioner.
+          </p>
+          <p className="text-sm text-muted-foreground">
+            All Rights Reserved 2025. Made with ♥ from New Jersey
           </p>
         </div>
       </footer>
