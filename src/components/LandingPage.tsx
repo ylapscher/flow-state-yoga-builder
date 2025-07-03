@@ -40,7 +40,6 @@ const LandingPage = () => {
       });
 
       setContactForm({ name: '', email: '', message: '' });
-      setShowContact(false);
     } catch (error) {
       toast({
         title: "Error sending message",
@@ -82,7 +81,7 @@ const LandingPage = () => {
                 Contact Us
               </button>
               <Button onClick={() => setShowAuth(true)} variant="zen" size="sm">
-                Sign In / Sign Up
+                Sign In | Sign Up
               </Button>
             </div>
             <div className="md:hidden">
@@ -252,66 +251,6 @@ const LandingPage = () => {
           </div>
         </div>
       </div>
-
-      {/* Contact Form Section */}
-      {showContact && (
-        <div className="py-24 px-4 bg-gradient-to-r from-sage-light/10 to-zen-blue-light/10">
-          <div className="max-w-2xl mx-auto">
-            <Card className="shadow-card">
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Mail className="w-6 h-6 text-sage" />
-                  Contact Us
-                </CardTitle>
-                <CardDescription>
-                  Send us a message and we'll get back to you as soon as possible.
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <form onSubmit={handleContactSubmit} className="space-y-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="name">Name</Label>
-                    <Input
-                      id="name"
-                      value={contactForm.name}
-                      onChange={(e) => setContactForm({ ...contactForm, name: e.target.value })}
-                      required
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="email">Email</Label>
-                    <Input
-                      id="email"
-                      type="email"
-                      value={contactForm.email}
-                      onChange={(e) => setContactForm({ ...contactForm, email: e.target.value })}
-                      required
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="message">Message</Label>
-                    <Textarea
-                      id="message"
-                      rows={4}
-                      value={contactForm.message}
-                      onChange={(e) => setContactForm({ ...contactForm, message: e.target.value })}
-                      required
-                    />
-                  </div>
-                  <div className="flex gap-2">
-                    <Button type="submit" variant="zen" disabled={isSubmitting} className="flex-1">
-                      {isSubmitting ? 'Sending...' : 'Send Message'}
-                    </Button>
-                    <Button type="button" variant="outline" onClick={() => setShowContact(false)}>
-                      Cancel
-                    </Button>
-                  </div>
-                </form>
-              </CardContent>
-            </Card>
-          </div>
-        </div>
-      )}
 
       {/* CTA Section */}
       <div className="py-24 px-4 text-center">
